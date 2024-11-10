@@ -67,7 +67,7 @@ kubectl apply -f <manifest.yaml>
 ```
 И все сработало. Поднялся POD nginx-deployment, а в нем и nginx + nginx-exporter
 Pods:
-![pods](./lab-5/images/pods.png)
+![pods](./images/pods.png)
 Services:
-![pods](./lab-5/images/services.png)
+![pods](./images/services.png)
 

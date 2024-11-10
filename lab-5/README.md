@@ -60,5 +60,14 @@ spec:
      targetPort: 10
      protocol: TCP
 ```
-
+Почему же были выбраны порт 10, вместо дефолтного 80? Изначально все так и было, но впоследствии выяснилось на порту 80 что-то стало функционировать (graphana) и я не мог обратиться к nginx, поэтому порт был изменен в ходе выполнения лабораторной.
+После этого применяем манифест:
+```
+kubectl apply -f <manifest.yaml>
+```
+И все сработало. Поднялся POD nginx-deployment, а в нем и nginx + nginx-exporter
+Pods:
+![pods](./lab-5/images/pods.png)
+Services:
+![pods](./lab-5/images/services.png)
 

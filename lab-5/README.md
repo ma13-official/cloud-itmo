@@ -73,7 +73,7 @@ kubectl apply -f <manifest.yaml>
 
 Не забудем проложить путь до метрик nginx:
 
-![pods](./images/nginx-config.png)
+![pods](./images/nginx-conf.png)
 
 Pods:
 

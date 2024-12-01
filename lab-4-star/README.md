@@ -8,3 +8,9 @@ docker exec -it vault sh
 vault login root
 vault login -address=http://127.0.0.1:8200 root
 ![image](https://github.com/user-attachments/assets/b1dc2e7f-d2d3-4ecb-aad2-df921b0aff80)
+
+vault kv put secret/myapp DB_USER=myuser DB_PASSWORD=mypassword
+vault kv get -address=http://127.0.0.1:8200 secret/myapp
+vault token create -address=http://127.0.0.1:8200 -policy=root
+![image](https://github.com/user-attachments/assets/26b28d5d-8b61-4ffc-9d95-a2158711df02)
+

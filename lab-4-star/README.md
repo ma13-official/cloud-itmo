@@ -14,3 +14,5 @@ vault kv get -address=http://127.0.0.1:8200 secret/myapp
 vault token create -address=http://127.0.0.1:8200 -policy=root
 ![image](https://github.com/user-attachments/assets/26b28d5d-8b61-4ffc-9d95-a2158711df02)
 
+Секреты
+![image](https://github.com/user-attachments/assets/040f6afd-d56e-4e2a-a0f0-87582d4d7363)

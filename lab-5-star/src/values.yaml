@@ -1,0 +1,40 @@
+prometheus:
+  prometheusSpec:
+    serviceMonitorSelectorNilUsesHelmValues: false
+    serviceMonitorSelector: {}
+    serviceMonitorNamespaceSelector: {}
+    ruleSelector:
+       matchExpressions:
+        - key: prometheus
+          operator: In
+          values:
+          - example-rules
+grafana:
+  sidecar:
+    datasources:
+      defaultDatasourceEnabled: true
+
+alertmanager:
+  config:
+    global:
+      resolve_timeout: 5m
+      telegram_api_url: "https://api.telegram.org"
+
+    route:
+      receiver: telegram-bot
+
+    receivers:
+      - name: telegram-bot
+        telegram_configs:
+          - chat_id: 506720193
+            bot_token: 8061544116:AAGOgeBXRNrZMtobGzjSPBB1r1d8th5Eh3o
+            api_url: "https://api.telegram.org"
+            send_resolved: true
+            parse_mode: Markdown
+            message: |-
+              {{ range .Alerts }}
+                *Alert:* {{ .Annotations.summary }}
+                *Details:*
+                {{ range .Labels.SortedPairs }} • *{{ .Name }}:* `{{ .Value }}`
+                {{ end }}
+              {{ end }}

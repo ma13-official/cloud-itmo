@@ -1,0 +1,18 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  labels:
+    prometheus: example-rules
+    role: alert-rules
+  name: prom
+spec:
+  groups:
+      - name: nginx_alerts
+        rules:
+          - alert: NginxDown
+            expr: nginx_up == 0
+            for: 0m
+            labels:
+              severity: critical
+            annotations:
+              summary: "Nginx is down on {{ $labels.instance }}"

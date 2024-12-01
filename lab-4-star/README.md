@@ -16,3 +16,7 @@ vault token create -address=http://127.0.0.1:8200 -policy=root
 
 Секреты
 ![image](https://github.com/user-attachments/assets/040f6afd-d56e-4e2a-a0f0-87582d4d7363)
+
+
+
+![image](https://github.com/user-attachments/assets/c4552038-be3c-47e6-a888-171d6f69cb25)

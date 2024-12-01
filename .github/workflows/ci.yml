@@ -1,0 +1,44 @@
+name: CI/CD Pipeline with Vault
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install Vault CLI
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y vault
+
+      - name: Vault login
+        run: |
+          vault login ${{ secrets.VAULT_TOKEN }}
+        env:
+          VAULT_ADDR: ${{ secrets.VAULT_ADDR }}
+
+      - name: Get secrets from Vault
+        run: |
+          DB_USER=$(vault kv get -field=DB_USER secret/myapp)
+          DB_PASSWORD=$(vault kv get -field=DB_PASSWORD secret/myapp)
+          echo "DB_USER=$DB_USER" >> $GITHUB_ENV
+          echo "DB_PASSWORD=$DB_PASSWORD" >> $GITHUB_ENV
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+
+      - name: Run tests
+        run: |
+          pytest
+
+      - name: Deploy
+        run: |
+          echo "Deploying application with user $DB_USER"

@@ -25,17 +25,17 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y vault
 
-      - name: Fetch secrets from Vault
+      - name: Start Vault container
+        run: |
+          docker-compose up -d vault
+
+      - name: Initialize Vault and Fetch secrets
         env:
           VAULT_ADDR: http://127.0.0.1:8200
-          VAULT_TOKEN: ${{ secrets.VAULT_TOKEN }}
+          VAULT_TOKEN: root
         run: |
-          echo "Fetching secrets from Vault..."
+          echo "Initializing Vault..."
+          sleep 5  # Wait for Vault container to start
           SECRETS=$(curl -s --header "X-Vault-Token: $VAULT_TOKEN" $VAULT_ADDR/v1/secret/data/myapp | jq -r '.data.data')
           export DB_USER=$(echo $SECRETS | jq -r '.DB_USER')
-          export DB_PASSWORD=$(echo $SECRETS | jq -r '.DB_PASSWORD')
-          echo "Secrets fetched successfully."
-
-      - name: Use secrets
-        run: |
-          echo "Deploying with DB_USER=$DB_USER"
+         

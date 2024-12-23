@@ -18,17 +18,27 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y curl jq
 
-      - name: Fetch secrets from Vault
-        env:
-          VAULT_ADDR: http://<your_vault_server>:8200
-          VAULT_TOKEN: ${{ secrets.VAULT_TOKEN }}
+      - name: Install Vault
         run: |
-          echo "Fetching secrets from Vault..."
+          curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
+          
+          echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
+          
+          sudo apt-get update || true  # Обрабатываем возможные ошибки
+          sudo apt-get install -y vault
+
+      - name: Start Vault container
+        run: |
+          docker-compose up -d vault
+
+      - name: Initialize Vault and Fetch secrets
+        env:
+          VAULT_ADDR: http://127.0.0.1:8200
+          VAULT_TOKEN: root
+        run: |
+          echo "Initializing Vault..."
+          sleep 5  # Ждем, пока контейнер Vault запустится
+          
           SECRETS=$(curl -s --header "X-Vault-Token: $VAULT_TOKEN" $VAULT_ADDR/v1/secret/data/myapp | jq -r '.data.data')
           export DB_USER=$(echo $SECRETS | jq -r '.DB_USER')
-          export DB_PASSWORD=$(echo $SECRETS | jq -r '.DB_PASSWORD')
-          echo "Secrets fetched successfully."
-
-      - name: Use secrets
-        run: |
-          echo "Deploying with DB_USER=$DB_USER (password hidden)"
+          echo "DB_USER retrieved: $DB_USER"

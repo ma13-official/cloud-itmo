@@ -71,9 +71,13 @@ vault token create -address=http://127.0.0.1:8200 -policy=root
 
 Далее нужно узнать путь наших секретов - его можно подглядеть на странице http://localhost:8200/ui/vault/secrets/secret/kv/myapp/paths.
 
+![image](https://github.com/user-attachments/assets/b25158b5-9e0a-46da-b7c9-3f40b79bc0ea)
+
 Как оказалось, часть `/v1/secret` подставляется автоматически, значит наш путь - `/data/myapp`.
 
 Путем сложных обращений к разным объектам таки был получен доступ к функции read_secret - указываем наш путь и вуаля! Получаем ответ от Vault.
+
+![image](https://github.com/user-attachments/assets/09acfe55-4170-490f-b291-ac886c97faf2)
 
 Почему нужно дважды обратиться по ключу data? Первое обращение - тело ответа от vault, второе - обращение к самим секретам (здесь можно получить метаданные).
 
